@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchMVC.Infra.Data.Repositories
 {
-    internal class ProductRepository : IProductRepository
+    public class ProductRepository : IProductRepository
     {
         ApplicationDbContext _productContext;
         public ProductRepository(ApplicationDbContext productContext)
