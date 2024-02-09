@@ -10,10 +10,12 @@ namespace CleanArchMVC.WebUI.Controllers
     {
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
-        public ProductsController(IProductService productService, ICategoryService categoryService)
+        private readonly IWebHostEnvironment _environment;
+        public ProductsController(IProductService productService, ICategoryService categoryService, IWebHostEnvironment environment)
         {
             _productService = productService;
             _categoryService = categoryService;
+            _environment = environment;
         }
         public async Task<IActionResult> Index()
         {
@@ -83,6 +85,23 @@ namespace CleanArchMVC.WebUI.Controllers
         {
             await _productService.Remove(id);
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var productDTO = await _productService.GetById(id);
+
+            if (productDTO == null) return NotFound();
+
+            var wwwroot = _environment.WebRootPath;
+            var image = Path.Combine(wwwroot, "images\\" + productDTO.Image);
+            var exists = System.IO.File.Exists(image);
+            ViewBag.ImageExist = exists;
+
+            return View(productDTO);
         }
     }
 }
