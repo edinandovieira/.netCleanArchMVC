@@ -6,7 +6,7 @@ using CleanArchMVC.Domain.Interfaces;
 
 namespace CleanArchMVC.Application.Services
 {
-    internal class CategoryService : ICategoryService
+    public class CategoryService : ICategoryService
     {
         private ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
