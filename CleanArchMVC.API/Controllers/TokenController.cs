@@ -1,5 +1,6 @@
 ﻿using CleanArchMVC.API.Models;
 using CleanArchMVC.Domain.Account;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -24,6 +25,7 @@ namespace CleanArchMVC.API.Controllers
         }
 
         [HttpPost("CreateUser")]
+        [Authorize]
         public async Task<ActionResult> CreateUser([FromBody] LoginModel userInfo)
         {
             var result = await _authentication.RegisterUser(userInfo.Email, userInfo.Password);
@@ -40,6 +42,7 @@ namespace CleanArchMVC.API.Controllers
         }
 
         [HttpPost("LoginUser")]
+        [AllowAnonymous]
         public async Task<ActionResult<UserToken>> Login([FromBody] LoginModel userInfo)
         {
             var result = await _authentication.Authenticate(userInfo.Email, userInfo.Password);
@@ -55,6 +58,7 @@ namespace CleanArchMVC.API.Controllers
             }
         }
 
+        [AllowAnonymous]
         private UserToken GenerateToken(LoginModel userInfo)
         {
             var claims = new[]
@@ -68,7 +72,7 @@ namespace CleanArchMVC.API.Controllers
 
             var credentials = new SigningCredentials(privateKey, SecurityAlgorithms.HmacSha256);
 
-            var expiration = DateTime.UtcNow.AddMinutes(5);
+            DateTime expiration = DateTime.UtcNow.AddMinutes(5);
 
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],

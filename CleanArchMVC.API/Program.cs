@@ -9,7 +9,7 @@ builder.Services.AddInfraestructureAPI(builder.Configuration);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddInfraestructureSwagger();
 
 var app = builder.Build();
 
@@ -31,7 +31,8 @@ using (var serviceScope = app.Services.CreateScope())
     seedUserRoleInitial.SeedRoles();
     seedUserRoleInitial.SeedUsers();
 }
-
+app.UseStatusCodePages();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
