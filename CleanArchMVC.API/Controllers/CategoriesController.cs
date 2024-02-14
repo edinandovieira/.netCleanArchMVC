@@ -33,7 +33,7 @@ namespace CleanArchMVC.API.Controllers
 
             if (category == null)
             {
-                return NotFound("Categories not found");
+                return NotFound("Category not found");
             }
             return Ok(category);
         }
